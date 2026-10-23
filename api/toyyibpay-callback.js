@@ -1,4 +1,5 @@
-const { callbackHash } = require('./_lib/toyyibpay');
+const { callbackHash, toyyibPost } = require('./_lib/toyyibpay');
+const { sendCapiEvents } = require('./_lib/meta-capi');
 
 function parseBody(req) {
     let body = req.body;
@@ -45,6 +46,25 @@ module.exports = async (req, res) => {
             reason: payload.reason || null,
             hashOk
         });
+
+        // CAPI Purchase — hanya selepas toyyibPay sendiri sahkan bil ini dibayar
+        // (tidak percaya hash sahaja). event_id 'PUR-<orderId>' sama dengan paid.html.
+        if (status === '1' && billcode) {
+            const { data } = await toyyibPost('/index.php/api/getBillTransactions', { billCode: billcode });
+            const paid = (Array.isArray(data) ? data : []).find((row) => String(row.billpaymentStatus) === '1');
+            if (paid) {
+                const ref = String(paid.billExternalReferenceNo || orderId);
+                await sendCapiEvents([{
+                    eventName : 'Purchase',
+                    eventId   : 'PUR-' + ref,
+                    sourceUrl : 'https://tabitaofficial.com/paid.html',
+                    value     : Number(paid.billpaymentAmount) || Number(payload.amount) || 135,
+                    currency  : 'MYR',
+                }]);
+            } else {
+                console.warn('[toyyibpay-callback] status=1 tapi toyyibPay tak sahkan bayaran — Purchase tidak dihantar', billcode);
+            }
+        }
 
         res.status(200).send('OK');
     } catch (err) {

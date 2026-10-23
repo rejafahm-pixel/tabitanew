@@ -935,7 +935,27 @@
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
     document,'script','https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1326118405768473');
-    fbq('track', 'PageView');
+    window.__pvId = 'PV-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+    fbq('track', 'PageView', {}, { eventID: window.__pvId });
+    (function () {
+        // Pasangan server (CAPI) untuk PageView ini — event_id sama, Meta gabungkan.
+        // URL dihantar tanpa data peribadi: cuma halaman + UTM/fbclid.
+        var q = new URLSearchParams(location.search), keep = new URLSearchParams();
+        q.forEach(function (v, k) { if (/^utm_|^fbclid$/.test(k)) keep.set(k, v); });
+        var url = location.origin + location.pathname + (keep.toString() ? '?' + keep.toString() : '');
+        var c = function (n) { return (document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')) || [])[1] || ''; };
+        setTimeout(function () {
+            try {
+                fetch('/api/capi-event', {
+                    method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event_name: 'PageView', event_id: window.__pvId, event_source_url: url,
+                        fbp: c('_fbp'), fbc: c('_fbc') || (q.get('fbclid') ? 'fb.1.' + Date.now() + '.' + q.get('fbclid') : '')
+                    })
+                }).catch(function () {});
+            } catch (e) {}
+        }, 800);
+    })();
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1326118405768473&ev=PageView&noscript=1"/></noscript>
@@ -1546,9 +1566,18 @@
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span>Memproses…</span>';
 
-        // Meta Pixel — event optimasi iklan
+        // Meta Pixel — event optimasi iklan. ID yang sama dikirim ke server (CAPI),
+        // jadi Meta menggabungkan event browser & server menjadi satu (tak dobel).
+        const fbEventId = 'ATC-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+        const fbCookie = (n) => (document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')) || [])[1] || '';
+        const fbclid = new URLSearchParams(location.search).get('fbclid');
+        const fbMeta = {
+            event_id: fbEventId,
+            fbp: fbCookie('_fbp'),
+            fbc: fbCookie('_fbc') || (fbclid ? 'fb.1.' + Date.now() + '.' + fbclid : '')
+        };
         if (window.fbq) {
-            fbq('track', 'AddToCart', { value: Number(price), currency: 'MYR', content_name: prodName });
+            fbq('track', 'AddToCart', { value: Number(price), currency: 'MYR', content_name: prodName }, { eventID: fbEventId });
         }
 
         const params = new URLSearchParams({
@@ -1580,7 +1609,8 @@
                     harga: price,
                     kaedah: currentPaymentMethod === 'fpx' ? 'fpx' : 'toyyibpay',
                     bank: fpxBank,
-                    event_source_url: location.href
+                    event_source_url: location.href,
+                    ...fbMeta
                 })
             })
             .then(res => res.json())
@@ -1638,7 +1668,8 @@
                 produk: prodName,
                 harga: price,
                 kaedah: 'COD',
-                event_source_url: location.href
+                event_source_url: location.href,
+                ...fbMeta
             })
         }).catch(err => console.warn('[tracknotify] cod order:', err));
 

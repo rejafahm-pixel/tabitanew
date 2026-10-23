@@ -15,6 +15,7 @@ const {
     FPX_BANKS
 } = require('./_lib/toyyibpay');
 const { saveOrder } = require('./_lib/tracknotify');
+const { sendCapiEvents } = require('./_lib/meta-capi');
 
 function sendCors(res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -138,6 +139,20 @@ module.exports = async (req, res) => {
                 notes: orderId,
                 event_source_url: String(body.event_source_url || '').slice(0, 2000)
             }).catch(err => console.error('[tracknotify] gagal simpan order:', err.message));
+
+            // CAPI AddToCart — event_id sama dengan pixel browser (dedup)
+            await sendCapiEvents([{
+                eventName   : 'AddToCart',
+                eventId     : String(body.event_id || '').slice(0, 100) || undefined,
+                sourceUrl   : String(body.event_source_url || '').slice(0, 1000) || undefined,
+                phone,
+                value       : Number(harga) || 135,
+                currency    : 'MYR',
+                contentName : produk,
+                req,
+                fbp         : String(body.fbp || '').slice(0, 200),
+                fbc         : String(body.fbc || '').slice(0, 500),
+            }]);
 
 
             if (wantFpx) {

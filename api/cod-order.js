@@ -4,6 +4,7 @@
  * Dipanggil dari link.html / index.html bila pelanggan pilih COD
  */
 const { saveOrder } = require('./_lib/tracknotify');
+const { sendCapiEvents } = require('./_lib/meta-capi');
 const { PRODUCT, AMOUNT_RM, digitsPhone } = require('./_lib/toyyibpay');
 
 function sendCors(res) {
@@ -59,6 +60,20 @@ module.exports = async (req, res) => {
             event_source_url: String(body.event_source_url || '').slice(0, 2000)
         });
 
+
+        // CAPI AddToCart — event_id sama dengan pixel browser (dedup)
+        await sendCapiEvents([{
+            eventName   : 'AddToCart',
+            eventId     : String(body.event_id || '').slice(0, 100) || undefined,
+            sourceUrl   : String(body.event_source_url || '').slice(0, 1000) || undefined,
+            phone,
+            value       : Number(harga) || 135,
+            currency    : 'MYR',
+            contentName : produk,
+            req,
+            fbp         : String(body.fbp || '').slice(0, 200),
+            fbc         : String(body.fbc || '').slice(0, 500),
+        }]);
 
         return res.status(200).json({
             success : true,
