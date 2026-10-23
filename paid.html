@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="theme-color" content="#8B1E3F">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Status Pembayaran | Tabita Skincare Jakarta Original</title>
+    <link rel="icon" type="image/png" href="tabita-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #FFF9F9;
+            --rose-pink: #E8C5C8;
+            --deep-rose: #8B1E3F;
+            --text-dark: #2C2223;
+            --text-muted: #6B5B5E;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 20px 16px 40px;
+        }
+        .container {
+            max-width: 440px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 24px 20px;
+            box-shadow: 0 10px 30px rgba(139, 30, 63, 0.08);
+            border: 1px solid var(--rose-pink);
+            text-align: center;
+        }
+        .logo-bar { margin-bottom: 20px; }
+        .logo-bar img { height: 48px; object-fit: contain; }
+
+        .status-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
+        }
+        .status-icon.ok {
+            background: #E8F5E9;
+            color: #2E7D32;
+            border: 2px solid #A5D6A7;
+        }
+        .status-icon.wait {
+            background: #FFF8E1;
+            color: #B78103;
+            border: 2px solid #FFE082;
+        }
+        .status-icon.fail {
+            background: #FFEBEE;
+            color: #C62828;
+            border: 2px solid #EF9A9A;
+        }
+        h2 { font-size: 22px; font-weight: 900; color: var(--text-dark); margin-bottom: 6px; }
+        p.sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+
+        .notice-box {
+            border-radius: 16px;
+            padding: 16px;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .notice-box.ok {
+            background: #E8F5E9;
+            border: 1.5px solid #A5D6A7;
+        }
+        .notice-box.wait {
+            background: #FFF8E1;
+            border: 1.5px dashed #FFB300;
+        }
+        .notice-box.fail {
+            background: #FFEBEE;
+            border: 1.5px solid #EF9A9A;
+        }
+        .notice-box h4 { font-size: 14px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+        .notice-box.ok h4 { color: #1B5E20; }
+        .notice-box.wait h4 { color: #B78103; }
+        .notice-box.fail h4 { color: #C62828; }
+
+        .order-details-box {
+            background: #FAF3F4;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .detail-row { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+        .detail-row span:last-child { font-weight: 700; text-align: right; max-width: 220px; }
+        .detail-row.total { border-top: 1px dashed var(--rose-pink); padding-top: 10px; margin-top: 10px; font-weight: 800; font-size: 16px; }
+        .detail-row.total span.val { color: var(--deep-rose); }
+
+        .btn-wa {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #25D366;
+            color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 800;
+            padding: 16px;
+            border-radius: 14px;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+            margin-bottom: 12px;
+        }
+        .btn-retry {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #C42B5B;
+            color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 800;
+            padding: 16px;
+            border-radius: 14px;
+            text-decoration: none;
+            margin-bottom: 12px;
+        }
+        .btn-home {
+            display: block;
+            color: var(--text-muted);
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .hidden { display: none !important; }
+    </style>
+
+    <!-- Meta Pixel -->
+    <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1326118405768473');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1326118405768473&ev=PageView&noscript=1"/></noscript>
+    <!-- End Meta Pixel -->
+</head>
+<body>
+
+<div class="container">
+    <div class="logo-bar">
+        <img src="tabita-logo.png" alt="Tabita Skincare Official">
+    </div>
+
+    <div class="status-icon wait" id="status-icon">
+        <i class="fa-solid fa-spinner fa-spin" id="status-fa"></i>
+    </div>
+
+    <h2 id="status-title">MENYEMARKAN PEMBAYARAN...</h2>
+    <p class="sub" id="status-sub">Sila tunggu sebentar, kami semak status ToyyibPay.</p>
+
+    <div class="notice-box wait" id="notice-box">
+        <h4 id="notice-title"><i class="fa-solid fa-clock"></i> Semakan sedang berjalan</h4>
+        <p id="notice-text">Jangan tutup halaman ini.</p>
+    </div>
+
+    <div class="order-details-box">
+        <div class="detail-row">
+            <span style="color:var(--text-muted);">Nama Pembeli:</span>
+            <span id="disp-nama">—</span>
+        </div>
+        <div class="detail-row">
+            <span style="color:var(--text-muted);">No WhatsApp:</span>
+            <span id="disp-phone">—</span>
+        </div>
+        <div class="detail-row">
+            <span style="color:var(--text-muted);">Alamat Penghantaran:</span>
+            <span id="disp-alamat">—</span>
+        </div>
+        <div class="detail-row">
+            <span style="color:var(--text-muted);">Produk Pilihan:</span>
+            <span id="disp-produk">—</span>
+        </div>
+        <div class="detail-row">
+            <span style="color:var(--text-muted);">Rujukan:</span>
+            <span id="disp-ref">—</span>
+        </div>
+        <div class="detail-row total">
+            <span>JUMLAH:</span>
+            <span class="val" id="disp-harga">RM 135.00</span>
+        </div>
+    </div>
+
+    <a href="#" id="wa-btn" class="btn-wa hidden" target="_blank" rel="noopener">
+        <i class="fa-brands fa-whatsapp" style="font-size:20px;"></i>
+        <span>SAHKAN PESANAN DI WHATSAPP</span>
+    </a>
+
+    <a href="index.html#order-form" id="retry-btn" class="btn-retry hidden">CUBA BAYAR SEMULA</a>
+    <a href="index.html" class="btn-home">← Kembali Ke Halaman Utama</a>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const nama = params.get('nama') || 'Pelanggan Tabita';
+    const telefon = params.get('telefon') || '';
+    const alamat = params.get('alamat') || '';
+    const poskod = params.get('poskod') || '';
+    const bandar = params.get('bandar') || '';
+    const negeri = params.get('negeri') || '';
+    const produk = params.get('produk') || 'SET EKSKLUSIF TABITA ORIGINAL JAKARTA';
+    const harga = params.get('harga') || '135';
+    const billcode = params.get('billcode') || '';
+    const orderId = params.get('order_id') || params.get('ref') || '';
+    const returnStatus = params.get('status_id') || '';
+
+    document.getElementById('disp-nama').textContent = nama;
+    document.getElementById('disp-phone').textContent = telefon;
+    document.getElementById('disp-alamat').textContent = [alamat, poskod, bandar, negeri].filter(Boolean).join(', ');
+    document.getElementById('disp-produk').textContent = produk;
+    document.getElementById('disp-harga').textContent = 'RM ' + harga + '.00';
+    document.getElementById('disp-ref').textContent = billcode || orderId || '—';
+
+    function render(status, extra) {
+        const icon = document.getElementById('status-icon');
+        const fa = document.getElementById('status-fa');
+        const title = document.getElementById('status-title');
+        const sub = document.getElementById('status-sub');
+        const notice = document.getElementById('notice-box');
+        const noticeTitle = document.getElementById('notice-title');
+        const noticeText = document.getElementById('notice-text');
+        const waBtn = document.getElementById('wa-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const refLabel = extra && extra.invoiceNo ? extra.invoiceNo : (billcode || orderId || '—');
+        document.getElementById('disp-ref').textContent = refLabel;
+
+        icon.className = 'status-icon';
+        notice.className = 'notice-box';
+        waBtn.classList.add('hidden');
+        retryBtn.classList.add('hidden');
+
+        if (status === 'paid') {
+            // Meta Pixel Purchase event
+            if (window.fbq) {
+                fbq('track', 'Purchase', { value: Number(harga) || 135, currency: 'MYR', content_name: produk });
+            }
+            icon.classList.add('ok');
+            fa.className = 'fa-solid fa-check';
+            title.textContent = 'PEMBAYARAN BERJAYA!';
+            sub.textContent = 'Terima kasih Kakak. Bayaran FPX ToyyibPay sudah diterima dan pesanan sedang diproses.';
+            notice.classList.add('ok');
+            noticeTitle.innerHTML = '<i class="fa-solid fa-truck-fast"></i> Arahan Penghantaran';
+            noticeText.innerHTML = 'Barang akan dihantar ke alamat di bawah. Posmen NinjaVan / J&amp;T akan hubungi WhatsApp akak. <strong>Tidak perlu bayar cash</strong> sebab dah settle online.';
+            const waMsg = `Salam Kak Liza, saya dah BAYAR via ToyyibPay FPX:%0A%0A• *Nama:* ${nama}%0A• *Produk:* ${produk}%0A• *Jumlah:* RM${harga}.00 (PAID)%0A• *Bill:* ${refLabel}%0A• *Alamat:* ${alamat}, ${poskod} ${bandar}, ${negeri}%0A%0AMohon proses dan hantar secepat mungkin. Terima kasih!`;
+            waBtn.href = `https://wa.me/60126413858?text=${waMsg}`;
+            waBtn.classList.remove('hidden');
+            return;
+        }
+
+        if (status === 'pending') {
+            icon.classList.add('wait');
+            fa.className = 'fa-solid fa-clock';
+            title.textContent = 'PEMBAYARAN SEDANG DIPROSES';
+            sub.textContent = 'Bank masih sahkan transaksi. Jangan buat bayaran sekali lagi dulu.';
+            notice.classList.add('wait');
+            noticeTitle.innerHTML = '<i class="fa-solid fa-hourglass-half"></i> Sila tunggu';
+            noticeText.textContent = 'Kalau duit sudah keluar dari akaun, WhatsApp Kak Liza dengan resit. Jangan repeat payment.';
+            const waMsg = `Salam Kak Liza, saya dah cuba bayar ToyyibPay tapi status masih PENDING:%0A%0A• *Nama:* ${nama}%0A• *Bill:* ${refLabel}%0A• *Alamat:* ${alamat}, ${poskod} ${bandar}, ${negeri}`;
+            waBtn.href = `https://wa.me/60126413858?text=${waMsg}`;
+            waBtn.querySelector('span').textContent = 'TANYA STATUS DI WHATSAPP';
+            waBtn.classList.remove('hidden');
+            return;
+        }
+
+        icon.classList.add('fail');
+        fa.className = 'fa-solid fa-xmark';
+        title.textContent = 'PEMBAYARAN TIDAK BERJAYA';
+        sub.textContent = 'Bayaran FPX tidak lengkap. Akak boleh cuba semula atau WhatsApp kami.';
+        notice.classList.add('fail');
+        noticeTitle.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Tiada bayaran diterima';
+        noticeText.textContent = 'Kalau duit terpotong tapi halaman ini gagal, hantar resit ke WhatsApp Kak Liza. Jangan panik.';
+        retryBtn.classList.remove('hidden');
+        const waMsg = `Salam Kak Liza, bayaran ToyyibPay saya TAK BERJAYA:%0A%0A• *Nama:* ${nama}%0A• *Bill:* ${refLabel}%0A• *Alamat:* ${alamat}, ${poskod} ${bandar}, ${negeri}`;
+        waBtn.href = `https://wa.me/60126413858?text=${waMsg}`;
+        waBtn.querySelector('span').textContent = 'WHATSAPP KAK LIZA';
+        waBtn.classList.remove('hidden');
+    }
+
+    function statusFromReturnId(id) {
+        if (id === '1') return 'paid';
+        if (id === '2' || id === '4') return 'pending';
+        if (id === '3') return 'failed';
+        return '';
+    }
+
+    async function checkStatus() {
+        if (!billcode) {
+            render(statusFromReturnId(returnStatus) || 'failed');
+            return;
+        }
+        try {
+            const res = await fetch('/api/toyyibpay-status?billcode=' + encodeURIComponent(billcode));
+            const data = await res.json();
+            if (data && data.success && data.status && data.status !== 'unknown') {
+                render(data.status, data);
+                return;
+            }
+        } catch (_) {}
+        render(statusFromReturnId(returnStatus) || 'pending');
+    }
+
+    checkStatus();
+</script>
+
+</body>
+</html>

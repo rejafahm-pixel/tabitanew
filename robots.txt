@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://tabitaofficial.com/sitemap.xml

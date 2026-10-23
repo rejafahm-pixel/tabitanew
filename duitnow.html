@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="theme-color" content="#8B1E3F">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Scan DuitNow QR | Tabita Skincare</title>
+    <link rel="icon" type="image/png" href="tabita-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rose: #8B1E3F;
+            --muted: #6B5B5E;
+            --dark: #231F20;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #FFF9F9;
+            color: var(--dark);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            padding: 24px 16px 40px;
+        }
+        .wrap {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #F0E4E6;
+            border-radius: 22px;
+            padding: 28px 22px 24px;
+            text-align: center;
+        }
+        .logo { height: 44px; margin-bottom: 18px; }
+        h1 { font-size: 20px; font-weight: 600; line-height: 1.4; margin-bottom: 6px; }
+        .sub { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+        .qr-box {
+            width: 232px;
+            height: 232px;
+            margin: 0 auto 14px;
+            padding: 12px;
+            background: #fff;
+            border: 1px solid #EDE3E5;
+            border-radius: 16px;
+        }
+        .qr-box img { width: 100%; height: 100%; display: block; }
+        .timer {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--rose);
+            margin-bottom: 4px;
+        }
+        .status { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+        .amount {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 14px 0;
+            border-top: 1px dashed #E8D5D8;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+        .amount span { font-size: 14px; color: var(--muted); }
+        .amount strong { font-size: 22px; font-weight: 700; color: var(--rose); letter-spacing: -0.02em; }
+        .how {
+            text-align: left;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.65;
+            margin-bottom: 20px;
+        }
+        .how ol { padding-left: 18px; }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: 0;
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-retry { background: var(--rose); color: #fff; margin-bottom: 10px; }
+        .btn-home { background: transparent; color: var(--muted); }
+        .hidden { display: none !important; }
+        .expired .qr-box img { opacity: 0.28; }
+    </style>
+
+    <!-- Meta Pixel -->
+    <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?\n    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;\n    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;\n    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,\n    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1326118405768473');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1326118405768473&ev=PageView&noscript=1"/></noscript>
+    <!-- End Meta Pixel -->
+</head>
+<body>
+<div class="wrap" id="page">
+    <img src="tabita-logo.png" alt="Tabita" class="logo">
+    <h1>Scan DuitNow QR</h1>
+    <p class="sub">Buka app bank atau e-wallet, scan, siap. Amaun sudah tetapkan RM135.</p>
+
+    <div class="qr-box">
+        <img id="qr-img" alt="DuitNow QR Tabita RM135">
+    </div>
+    <div class="timer" id="timer">05:00</div>
+    <div class="status" id="status">Menunggu bayaran…</div>
+
+    <div class="amount">
+        <span>Jumlah</span>
+        <strong>RM 135.00</strong>
+    </div>
+
+    <div class="how">
+        <ol>
+            <li>Buka MAE, CIMB, Boost, TnG atau GrabPay</li>
+            <li>Pilih Scan / DuitNow QR</li>
+            <li>Confirm RM135</li>
+        </ol>
+    </div>
+
+    <button type="button" class="btn btn-retry hidden" id="retry-btn">Jana QR baru</button>
+    <button type="button" class="btn btn-home" id="home-btn">Kembali ke borang</button>
+</div>
+
+<script>
+    const KEY = 'tabita_duitnow';
+    const data = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+    const page = document.getElementById('page');
+    const timerEl = document.getElementById('timer');
+    const statusEl = document.getElementById('status');
+    const retryBtn = document.getElementById('retry-btn');
+    const homeBtn = document.getElementById('home-btn');
+
+    if (!data || !data.qrDataUrl) {
+        location.replace('index.html#order-form');
+    }
+
+    const rawExpiry = data && data.expirySeconds ? Number(data.expirySeconds) : 300;
+    const totalSeconds = (isNaN(rawExpiry) || rawExpiry <= 0) ? 300 : rawExpiry;
+    const startedAt = (data && data.startedAt && !isNaN(data.startedAt)) ? Number(data.startedAt) : Date.now();
+    
+    if (data && !data.startedAt) {
+        data.startedAt = startedAt;
+        try { sessionStorage.setItem(KEY, JSON.stringify(data)); } catch(_) {}
+    }
+
+    let tick = null;
+    let poll = null;
+    let stopped = false;
+
+    function remaining() {
+        const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+        return Math.max(0, totalSeconds - elapsed);
+    }
+
+    function fmt(s) {
+        const m = Math.floor(s / 60);
+        const r = s % 60;
+        return String(m).padStart(2, '0') + ':' + String(r).padStart(2, '0');
+    }
+
+    function goPaid() {
+        stopped = true;
+        clearInterval(tick);
+        clearInterval(poll);
+        const q = new URLSearchParams({
+            nama: data.nama || '',
+            telefon: data.telefon || '',
+            alamat: data.alamat || '',
+            poskod: data.poskod || '',
+            bandar: data.bandar || '',
+            negeri: data.negeri || '',
+            produk: data.produk || 'SET EKSKLUSIF TABITA ORIGINAL JAKARTA',
+            harga: data.harga || '135',
+            billcode: data.billCode || '',
+            order_id: data.orderId || '',
+            status_id: '1'
+        });
+        sessionStorage.removeItem(KEY);
+        location.replace('paid.html?' + q.toString());
+    }
+
+    function expire() {
+        if (stopped) return;
+        stopped = true;
+        clearInterval(tick);
+        clearInterval(poll);
+        page.classList.add('expired');
+        timerEl.textContent = '00:00';
+        statusEl.textContent = 'QR tamat. Jana yang baru untuk terus bayar.';
+        retryBtn.classList.remove('hidden');
+    }
+
+    async function checkPaid() {
+        if (stopped || !data) return;
+        const qs = new URLSearchParams();
+        if (data.billCode) qs.set('billcode', data.billCode);
+        if (data.invoiceNo) qs.set('invno', data.invoiceNo);
+        try {
+            const res = await fetch('/api/toyyibpay-status?' + qs.toString());
+            const json = await res.json();
+            if (json && json.paid) goPaid();
+        } catch (_) {}
+    }
+
+    function paintTimer() {
+        const left = remaining();
+        timerEl.textContent = fmt(left);
+        if (left <= 0) expire();
+    }
+
+    function start() {
+        document.getElementById('qr-img').src = data.qrDataUrl;
+        paintTimer();
+        tick = setInterval(paintTimer, 250);
+        checkPaid();
+        poll = setInterval(checkPaid, 5000);
+    }
+
+    if (data && data.qrDataUrl) start();
+
+    retryBtn.addEventListener('click', async () => {
+        retryBtn.disabled = true;
+        retryBtn.textContent = 'Memproses…';
+        try {
+            const res = await fetch('/api/toyyibpay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nama: data.nama,
+                    telefon: data.telefon,
+                    alamat: data.alamat,
+                    poskod: data.poskod,
+                    bandar: data.bandar,
+                    negeri: data.negeri
+                })
+            });
+            const json = await res.json();
+            if (json && json.success && json.qrDataUrl) {
+                const next = Object.assign({}, data, {
+                    qrDataUrl: json.qrDataUrl,
+                    billCode: json.billCode,
+                    invoiceNo: json.invoiceNo,
+                    orderId: json.orderId,
+                    expirySeconds: json.expirySeconds || 300
+                });
+                sessionStorage.setItem(KEY, JSON.stringify(next));
+                location.reload();
+                return;
+            }
+        } catch (_) {}
+        retryBtn.disabled = false;
+        retryBtn.textContent = 'Jana QR baru';
+        alert('Tidak dapat jana QR. Cuba semula.');
+    });
+
+    homeBtn.addEventListener('click', () => {
+        location.href = 'index.html#order-form';
+    });
+</script>
+</body>
+</html>

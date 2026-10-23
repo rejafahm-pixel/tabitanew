@@ -1,0 +1,84 @@
+TABITA SKINCARE — GOOGLE APPS SCRIPT
+=====================================
+
+CARA PAKAI:
+1. Buka Google Sheets baru
+2. Buat header baris 1 (rujuk bawah)
+3. Extensions → Apps Script → paste kod di bawah ke Code.gs
+4. Deploy → New deployment → Web app
+   - Execute as: Me
+   - Who has access: Anyone
+5. Copy URL → paste ke link.html (LINK.googleScript)
+
+HEADER BARIS 1 (isi manual dalam sheet):
+Follow Up WA | Tarikh | Nama | Alamat | Bandar | Poskod | Negeri | WhatsApp | Pakej | Harga | Kaedah Bayaran
+
+=====================================
+PASTE KE Code.gs ↓
+=====================================
+
+function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    var param = e.parameter;
+
+    var nama = param.nama_penuh || "-";
+    var alamat = param.alamat || "-";
+    var bandar = param.bandar || "-";
+    var poskod = param.poskod || "-";
+    var negeri = param.negeri || "-";
+    var rawWhatsapp = param.no_whatsapp || "";
+    var labelPakej = param.pakej || "-";
+    var labelHarga = param.harga || "-";
+    var labelBayar = param.kaedah_pembayaran || "-";
+
+    var tanggalSekarang = Utilities.formatDate(new Date(), "GMT+8", "yyyy-MM-dd HH:mm:ss");
+
+    var cleanWhatsapp = rawWhatsapp.replace(/[\s+]/g, "");
+    if (!cleanWhatsapp.startsWith("60") && cleanWhatsapp.startsWith("0")) {
+      cleanWhatsapp = "60" + cleanWhatsapp.substring(1);
+    } else if (!cleanWhatsapp.startsWith("60") && !cleanWhatsapp.startsWith("0") && cleanWhatsapp !== "") {
+      cleanWhatsapp = "60" + cleanWhatsapp;
+    }
+
+    var textMessage = "Halo, saya dah terima form untuk order Tabita Skincare 🙏\n\n" +
+                      "👤 Nama: " + nama + "\n" +
+                      "🏠 Alamat: " + alamat + "\n" +
+                      "🏙️ Bandar: " + bandar + "\n" +
+                      "📍 Negeri: " + negeri + "\n" +
+                      "📮 Poskod: " + poskod + "\n" +
+                      "📱 WhatsApp: " + (rawWhatsapp.startsWith("+") ? rawWhatsapp : "+" + rawWhatsapp) + "\n" +
+                      "🧴 Pakej: " + labelPakej + "\n" +
+                      "💳 Kaedah Bayaran: " + labelBayar + "\n\n" +
+                      "🧾 Ringkasan Pesanan:\n" +
+                      "   " + labelPakej + " × 1 — RM " + labelHarga + "\n" +
+                      "   Pos — PERCUMA 🚚\n" +
+                      "   ─────────────────\n" +
+                      "   Jumlah: RM " + labelHarga;
+
+    var formulaFollowUp = '=HYPERLINK("https://wa.me/' + cleanWhatsapp + '?text=" & ENCODEURL("' + textMessage.replace(/"/g, '""') + '"); "Follow Up WA")';
+
+    var rowData = [
+      formulaFollowUp,
+      tanggalSekarang,
+      nama,
+      alamat,
+      bandar,
+      poskod,
+      negeri,
+      rawWhatsapp,
+      labelPakej,
+      labelHarga,
+      labelBayar
+    ];
+
+    sheet.appendRow(rowData);
+
+    return ContentService.createTextOutput(JSON.stringify({ "result": "success" }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ "result": "error", "error": error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
