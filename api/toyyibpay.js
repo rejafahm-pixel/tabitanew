@@ -15,7 +15,6 @@ const {
     FPX_BANKS
 } = require('./_lib/toyyibpay');
 const { saveOrder } = require('./_lib/tracknotify');
-const { sendCapiEvents } = require('./_lib/meta-capi');
 
 function sendCors(res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -140,18 +139,6 @@ module.exports = async (req, res) => {
                 event_source_url: String(body.event_source_url || '').slice(0, 2000)
             }).catch(err => console.error('[tracknotify] gagal simpan order:', err.message));
 
-            // Meta CAPI — server-side pixel (bundling)
-            sendCapiEvents([{
-                eventName   : 'InitiateCheckout',
-                eventId     : orderId,
-                sourceUrl   : 'https://tabitaofficial.com/link.html',
-                phone       : telefon,
-                value       : Number(harga) || 135,
-                currency    : 'MYR',
-                contentName : produk,
-                clientIp    : req.headers['x-forwarded-for'] || req.socket?.remoteAddress,
-                userAgent   : req.headers['user-agent'],
-            }]).catch(() => {});
 
             if (wantFpx) {
                 let fpx = null;

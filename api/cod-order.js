@@ -4,7 +4,6 @@
  * Dipanggil dari link.html / index.html bila pelanggan pilih COD
  */
 const { saveOrder } = require('./_lib/tracknotify');
-const { sendCapiEvents } = require('./_lib/meta-capi');
 const { PRODUCT, AMOUNT_RM, digitsPhone } = require('./_lib/toyyibpay');
 
 function sendCors(res) {
@@ -60,18 +59,6 @@ module.exports = async (req, res) => {
             event_source_url: String(body.event_source_url || '').slice(0, 2000)
         });
 
-        // Meta CAPI — server-side pixel (bundling)
-        sendCapiEvents([{
-            eventName   : 'InitiateCheckout',
-            eventId     : `COD-${Date.now()}`,
-            sourceUrl   : 'https://tabitaofficial.com/link.html',
-            phone       : phone,
-            value       : Number(harga) || 135,
-            currency    : 'MYR',
-            contentName : produk,
-            clientIp    : req.headers['x-forwarded-for'] || req.socket?.remoteAddress,
-            userAgent   : req.headers['user-agent'],
-        }]).catch(() => {});
 
         return res.status(200).json({
             success : true,

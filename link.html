@@ -1626,7 +1626,6 @@
         // Meta Pixel — event optimasi iklan
         if (window.fbq) {
             fbq('track', 'AddToCart', { value: Number(price), currency: 'MYR', content_name: prodName });
-            fbq('track', 'InitiateCheckout', { value: Number(price), currency: 'MYR', content_name: prodName });
         }
 
         const params = new URLSearchParams({
