@@ -1657,7 +1657,8 @@
                     produk: prodName,
                     harga: price,
                     kaedah: currentPaymentMethod === 'fpx' ? 'fpx' : 'toyyibpay',
-                    bank: fpxBank
+                    bank: fpxBank,
+                    event_source_url: location.href
                 })
             })
             .then(res => res.json())
@@ -1713,7 +1714,8 @@
                 negeri: negeri,
                 produk: prodName,
                 harga: price,
-                kaedah: 'COD'
+                kaedah: 'COD',
+                event_source_url: location.href
             })
         }).catch(err => console.warn('[tracknotify] cod order:', err));
 

@@ -13,9 +13,9 @@ const {
     generateDuitNowQr,
     startFpxPayment,
     FPX_BANKS
-} = require('../lib/toyyibpay');
-const { saveOrder } = require('../lib/tracknotify');
-const { sendCapiEvents } = require('../lib/meta-capi');
+} = require('./_lib/toyyibpay');
+const { saveOrder } = require('./_lib/tracknotify');
+const { sendCapiEvents } = require('./_lib/meta-capi');
 
 function sendCors(res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -136,8 +136,9 @@ module.exports = async (req, res) => {
                 nama, telefon, alamat, poskod, bandar, negeri,
                 produk, harga,
                 kaedah: wantFpx ? 'FPX' : 'DuitNow/ToyyibPay',
-                notes: orderId
-            }, 'lp').catch(err => console.error('[tracknotify] gagal simpan order:', err.message));
+                notes: orderId,
+                event_source_url: String(body.event_source_url || '').slice(0, 2000)
+            }).catch(err => console.error('[tracknotify] gagal simpan order:', err.message));
 
             // Meta CAPI — server-side pixel (bundling)
             sendCapiEvents([{

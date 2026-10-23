@@ -1,4 +1,4 @@
-const { toyyibPost } = require('../lib/toyyibpay');
+const { toyyibPost } = require('./_lib/toyyibpay');
 
 module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');

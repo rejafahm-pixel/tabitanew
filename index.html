@@ -1580,7 +1580,8 @@
                     produk: prodName,
                     harga: price,
                     kaedah: currentPaymentMethod === 'fpx' ? 'fpx' : 'toyyibpay',
-                    bank: fpxBank
+                    bank: fpxBank,
+                    event_source_url: location.href
                 })
             })
             .then(res => res.json())
@@ -1622,6 +1623,25 @@
             });
             return;
         }
+
+        // Catat order COD ke TrackNotify (keepalive: tetap terkirim walau halaman pindah ke cod.html)
+        fetch('/api/cod-order', {
+            method: 'POST',
+            keepalive: true,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nama: nama,
+                telefon: whatsapp,
+                alamat: alamat,
+                poskod: poskod,
+                bandar: bandar,
+                negeri: negeri,
+                produk: prodName,
+                harga: price,
+                kaedah: 'COD',
+                event_source_url: location.href
+            })
+        }).catch(err => console.warn('[tracknotify] cod order:', err));
 
         setTimeout(() => {
             window.location.href = 'cod.html?' + params.toString();

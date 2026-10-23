@@ -3,9 +3,9 @@
  * Endpoint untuk terima dan simpan order COD ke TrackNotify
  * Dipanggil dari link.html / index.html bila pelanggan pilih COD
  */
-const { saveOrder } = require('../lib/tracknotify');
-const { sendCapiEvents } = require('../lib/meta-capi');
-const { PRODUCT, AMOUNT_RM, digitsPhone } = require('../lib/toyyibpay');
+const { saveOrder } = require('./_lib/tracknotify');
+const { sendCapiEvents } = require('./_lib/meta-capi');
+const { PRODUCT, AMOUNT_RM, digitsPhone } = require('./_lib/toyyibpay');
 
 function sendCors(res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -56,8 +56,9 @@ module.exports = async (req, res) => {
             nama, telefon: phone, alamat, poskod, bandar, negeri,
             produk, harga,
             kaedah: 'COD',
-            notes: `COD - ${new Date().toISOString()}`
-        }, 'cod');
+            notes: `COD - ${new Date().toISOString()}`,
+            event_source_url: String(body.event_source_url || '').slice(0, 2000)
+        });
 
         // Meta CAPI — server-side pixel (bundling)
         sendCapiEvents([{

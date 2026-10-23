@@ -1,4 +1,4 @@
-const { callbackHash } = require('../lib/toyyibpay');
+const { callbackHash } = require('./_lib/toyyibpay');
 
 function parseBody(req) {
     let body = req.body;
